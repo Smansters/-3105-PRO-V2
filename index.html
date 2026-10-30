@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>3105 Pro V1.4</title>
+  <script src="https://cdn.tailwindcss.com">
+</script>
+  <style>
+    body{background:#020617;color:#e2e8f0;font-family:Arial,sans-serif}
+    .card{background:#0f172acc;border:1px solid #334155;border-radius:18px;padding:20px}
+    .input{width:100%;background:#0f172a;border:1px solid #475569;border-radius:10px;padding:11px}
+    .label{display:block;font-size:12px;font-weight:700;color:#94a3b8;margin-bottom:7px}
+    .btn{width:100%;padding:13px;border-radius:10px;font-weight:800;background:linear-gradient(90deg,#0891b2,#7c3aed)}
+    .tab{padding:14px 10px;font-weight:800;border-bottom:2px solid transparent}
+    .tab.active{color:#22d3ee;border-color:#22d3ee}
+    pre{white-space:pre-wrap;word-break:break-word}
+  </style>
+</head>
+<body>
+<main class="max-w-6xl mx-auto p-4 md:p-8">
+  <div class="card">
+    <h1 class="text-3xl font-black text-cyan-400">CÔNG CỤ 3105 PRO V1.4</h1>
+    <p class="text-slate-400 mt-1">PUBG schema 2 • Liên Quân schema 9 • Không tự lọc/xóa file</p>
+
+
+    <nav class="grid grid-cols-2 md:grid-cols-6 mt-6 border-b border-slate-700">
+      <button class="tab active" data-tab="build">TẠO 3105</button>
+      <button class="tab" data-tab="extract">GIẢI NÉN</button>
+      <button class="tab" data-tab="inspect">KIỂM TRA</button>
+      <button class="tab" data-tab="update">CẬP NHẬT</button>
+      <button class="tab" data-tab="rebundle">ĐỔI BUNDLE ID</button>
+      <button class="tab" data-tab="ziptools">CÔNG CỤ ZIP</button>
+    </nav>
+
+
+    <section class="mt-6">
+      <div id="panel-build" class="panel space-y-5">
+        <form id="buildForm" class="space-y-5">
+          <div class="card">
+            <label class="label">FILE NGUỒN ZIP / PAK</label>
+            <input id="build_input" name="input_file" type="file" accept=".zip,.pak,.bytes,.txt,.json" class="input">
+            <div id="detect_hint" class="text-sm text-cyan-400 mt-2">Chưa chọn file</div>
+            <div class="grid md:grid-cols-2 gap-4 mt-4">
+              <div><label class="label">PUBG GLOBAL</label><input name="global_input" type="file" class="input"></div>
+              <div><label class="label">PUBG VNG</label><input name="vng_input" type="file" class="input"></div>
+            </div>
+          </div>
+
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <div><label class="label">TÊN DỰ ÁN</label><input name="name" placeholder="Nhập tên dự án" class="input"></div>
+            <div><label class="label">TÁC GIẢ</label><input name="author" value="MANZ-VIP" class="input"></div>
+            <div><label class="label">MẬT KHẨU</label><input name="password" value="MANVIP" class="input"></div>
+            <div><label class="label">LOẠI GAME</label>
+              <select id="build_preset" name="preset" class="input">
+                <option value="auto">Tự động</option>
+                <option value="pubg">PUBG GLOBAL + VNG</option>
+                <option value="pubg-5sv">PUBG 5 SERVER (CHUNG 1 FILE .3105)</option>
+                <option value="pubg-global">PUBG GLOBAL</option>
+                <option value="pubg-vng">PUBG VNG</option>
+                <option value="pubg-kr">PUBG KOREA (KR)</option>
+                <option value="pubg-tw">PUBG TAIWAN (TW)</option>
+                <option value="pubg-bgmi">BGMI INDIA</option>
+                <option value="lq">Liên Quân VN</option>
+                <option value="lq2">Liên Quân kgvn2</option>
+              </select>
+            </div>
+          </div>
+
+
+          <div class="card">
+            <h2 class="font-bold text-cyan-300 mb-2">PUBG 5 SERVER — TÁCH 5 FILE</h2>
+            <p class="text-sm text-slate-400 mb-2">Chọn PUBG 5 SERVER ở trên để tạo 1 file .3105 chung; hoặc dùng nút dưới đây để tải ZIP gồm 5 file .3105 riêng.</p>
+            <button type="button" id="pubg5Separate" class="input" style="cursor:pointer">Tạo 5 file .3105 riêng (ZIP)</button>
+          </div>
+          <div class="card">
+            <h2 class="font-bold text-cyan-300 mb-3">TÙY CHỈNH PUBG</h2>
+            <div class="grid md:grid-cols-3 gap-4">
+              <div><label class="label">TÊN PAK GLOBAL</label><input name="rename_global" class="input" placeholder="Để trống = giữ nguyên"></div>
+              <div><label class="label">TÊN PAK VNG</label><input name="rename_vng" class="input" placeholder="Để trống = giữ nguyên"></div>
+              <div><label class="label">THƯ MỤC PUBG</label>
+                <select name="pubg_folder" class="input">
+                  <option value="preserve">Mặc định</option>
+                  <option value="paks">Saved/Paks</option>
+                  <option value="puffer_temp">Saved/Paks/puffer_temp</option>
+                </select>
+              </div>
+            </div>
+            <div class="mt-4"><label class="label">BUNDLE ID TÙY CHỈNH</label><input name="bundle" class="input" placeholder="com.tencent.ig,vn.vng.pubgmobile"></div>
+          </div>
+
+
+          <div class="card">
+            <h2 class="font-bold text-emerald-300 mb-3">ĐƯỜNG DẪN ĐÍCH</h2>
+            <div class="flex gap-5 mb-3">
+              <label><input type="radio" name="path_mode" value="auto" checked> Tự động</label>
+              <label><input type="radio" name="path_mode" value="custom"> Tùy chỉnh</label>
+            </div>
+            <label class="label">PREFIX</label>
+            <input name="prefix" class="input" placeholder="VD: Documents/ShadowTrackerExtra/Saved/">
+            <input type="hidden" name="target_overrides" id="target_overrides" value="{}">
+            <p class="text-sm text-slate-400 mt-3">Sau khi xem trước, có thể sửa đích riêng từng file. Cột Terminal hiển thị lệnh mô tả rule dự kiến (không thực thi).</p>
+            <div class="flex flex-wrap gap-2 mt-3 items-center"><input id="preview_search" class="input" style="max-width:320px" placeholder="Tìm file / Bundle ID / đích"><select id="preview_bundle_filter" class="input" style="max-width:220px"><option value="">Tất cả Bundle ID</option></select><button type="button" id="preview_export" class="btn">Xuất mapping JSON</button></div>
+            <div id="preview_table" class="mt-3 overflow-x-auto"></div>
+            <div class="flex items-center gap-3 mt-3"><button type="button" id="preview_prev" class="btn">← Trước</button><span id="preview_page_info"></span><button type="button" id="preview_next" class="btn">Sau →</button></div>
+            <button id="btnPreview" type="button" class="btn mt-4">XEM TRƯỚC ĐƯỜNG DẪN</button>
+            <pre id="preview_output" class="hidden mt-4 p-4 bg-black rounded-xl text-emerald-300"></pre>
+          </div>
+
+
+          <button class="btn" type="submit">TẠO VÀ TẢI FILE .3105</button>
+          <pre id="build_status" class="hidden p-4 rounded-xl bg-emerald-950 text-emerald-300"></pre>
+          <pre id="build_error" class="hidden p-4 rounded-xl bg-red-950 text-red-300"></pre>
+        </form>
+      </div>
+
+
+      <div id="panel-extract" class="panel hidden">
+        <form id="extractForm" class="space-y-4">
+          <div><label class="label">FILE .3105</label><input name="file_3105" type="file" accept=".3105" required class="input"></div>
+          <div><label class="label">MẬT KHẨU</label><input name="password" value="MANVIP" class="input"></div>
+          <button class="btn" type="submit">GIẢI NÉN THÀNH ZIP</button>
+          <pre id="extract_error" class="hidden p-4 bg-red-950 text-red-300"></pre>
+        </form>
+      </div>
+
+
+      <div id="panel-inspect" class="panel hidden">
+        <form id="inspectForm" class="space-y-4">
+          <div><label class="label">FILE .3105</label><input name="file_3105" type="file" accept=".3105" required class="input"></div>
+          <div><label class="label">MẬT KHẨU</label><input name="password" value="MANVIP" class="input"></div>
+          <button class="btn" type="submit">KIỂM TRA</button>
+        </form>
+        <pre id="inspect_output" class="hidden mt-4 p-4 bg-black text-cyan-300 rounded-xl"></pre>
+      </div>
+
+
+      <div id="panel-update" class="panel hidden">
+        <form id="updateForm" class="space-y-5">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div><label class="label">FILE .3105 HIỆN TẠI</label><input name="old_3105" type="file" accept=".3105" required class="input"></div>
+            <div><label class="label">GÓI MỚI ZIP/PAK</label><input name="new_input" type="file" required class="input"></div>
+          </div>
+          <div class="grid md:grid-cols-3 gap-4">
+            <div><label class="label">MẬT KHẨU CŨ</label><input name="password" value="MANVIP" class="input"></div>
+            <div><label class="label">MẬT KHẨU MỚI</label><input name="new_password" class="input"></div>
+            <div><label class="label">CHẾ ĐỘ</label>
+              <select name="preset" class="input">
+                <option value="auto">Giữ nguyên</option>
+                <option value="pubg">PUBG GL+VNG</option>
+                <option value="pubg-global">PUBG GLOBAL</option>
+                <option value="pubg-vng">PUBG VNG</option>
+                <option value="pubg-kr">PUBG KOREA (KR)</option>
+                <option value="pubg-tw">PUBG TAIWAN (TW)</option>
+                <option value="pubg-bgmi">BGMI INDIA</option>
+                <option value="lq">Liên Quân</option>
+                <option value="lq2">Liên Quân kgvn2</option>
+              </select>
+            </div>
+            <div><label class="label">TÊN DỰ ÁN MỚI</label><input name="name" class="input"></div>
+            <div><label class="label">TÁC GIẢ MỚI</label><input name="author" class="input"></div>
+            <div><label class="label">THƯ MỤC PUBG</label>
+              <select name="pubg_folder" class="input">
+                <option value="preserve">Mặc định</option>
+                <option value="paks">Saved/Paks</option>
+                <option value="puffer_temp">puffer_temp</option>
+              </select>
+            </div>
+          </div>
+          <div class="card">
+            <h2 class="font-bold text-emerald-300 mb-3">ĐƯỜNG DẪN ĐÍCH GÓI MỚI</h2>
+            <div class="flex gap-5 mb-3">
+              <label><input type="radio" name="path_mode" value="auto" checked> Tự động</label>
+              <label><input type="radio" name="path_mode" value="custom"> Tùy chỉnh</label>
+            </div>
+            <input name="prefix" class="input" placeholder="VD: Documents/Resources/1.64.1/">
+          </div>
+          <button class="btn" type="submit">CẬP NHẬT FILE .3105</button>
+          <pre id="update_status" class="hidden p-4 rounded-xl bg-emerald-950 text-emerald-300"></pre>
+          <pre id="update_error" class="hidden p-4 rounded-xl bg-red-950 text-red-300"></pre>
+        </form>
+      </div>
+
+
+      <div id="panel-rebundle" class="panel hidden">
+        <form id="rebundleForm" class="space-y-4">
+          <div><label class="label">FILE .3105</label><input name="file_3105" type="file" required class="input"></div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div><label class="label">BUNDLE CŨ</label><input name="old_bundle" value="com.garena.game.kgvn" class="input"></div>
+            <div><label class="label">BUNDLE MỚI</label><input name="new_bundle" value="com.garena.game.kgvn2" class="input"></div>
+            <div><label class="label">MẬT KHẨU</label><input name="password" value="MANVIP" class="input"></div>
+            <div><label class="label">MẬT KHẨU MỚI</label><input name="new_password" class="input"></div>
+          </div>
+          <button class="btn" type="submit">ĐỔI BUNDLE ID</button>
+          <pre id="rebundle_error" class="hidden p-4 bg-red-950 text-red-300"></pre>
+        </form>
+      </div>
+
+
+      <div id="panel-ziptools" class="panel hidden space-y-5">
+        <div class="card">
+          <h2 class="font-bold text-cyan-300 mb-3">PHÂN TÍCH GÓI</h2>
+          <form id="zipAnalyzeForm" class="space-y-3">
+            <input name="zip_file" type="file" accept=".zip" required class="input">
+            <button class="btn" type="submit">PHÂN TÍCH ZIP</button>
+          </form>
+          <pre id="zip_analyze_output" class="hidden mt-4 p-4 bg-black text-cyan-300 rounded-xl"></pre>
+        </div>
+
+
+        <div class="card">
+          <h2 class="font-bold text-red-300 mb-3">CHẨN ĐOÁN</h2>
+          <p class="text-slate-400 text-sm mb-3">Chỉ cảnh báo, không tự xóa file.</p>
+          <form id="zipDiagnoseForm" class="space-y-3">
+            <input name="zip_file" type="file" accept=".zip" required class="input">
+            <button class="btn" type="submit">CHẨN ĐOÁN</button>
+          </form>
+          <pre id="zip_diagnose_output" class="hidden mt-4 p-4 bg-black text-red-300 rounded-xl"></pre>
+        </div>
+
+
+        <div class="card">
+          <h2 class="font-bold text-purple-300 mb-3">LÀM SẠCH ZIP + MANIFEST</h2>
+          <form id="zipCleanForm" class="space-y-3">
+            <input name="zip_file" type="file" accept=".zip" required class="input">
+            <select name="preset" class="input">
+              <option value="auto">Tự động</option>
+              <option value="lq">Liên Quân</option>
+              <option value="lq2">Liên Quân kgvn2</option>
+              <option value="pubg">PUBG GL+VNG</option>
+              <option value="pubg-global">PUBG GLOBAL</option>
+              <option value="pubg-vng">PUBG VNG</option>
+                <option value="pubg-kr">PUBG KOREA (KR)</option>
+                <option value="pubg-tw">PUBG TAIWAN (TW)</option>
+                <option value="pubg-bgmi">BGMI INDIA</option>
+            </select>
+            <select name="pubg_folder" class="input">
+              <option value="preserve">Mặc định</option>
+              <option value="paks">Saved/Paks</option>
+              <option value="puffer_temp">puffer_temp</option>
+            </select>
+            <button class="btn" type="submit">LÀM SẠCH VÀ TẢI ZIP</button>
+            <pre id="zip_clean_error" class="hidden p-4 bg-red-950 text-red-300"></pre>
+          </form>
+        </div>
+
+
+        <div class="card">
+          <h2 class="font-bold text-amber-300 mb-3">GỘP 2 ZIP</h2>
+          <form id="zipMergeForm" class="space-y-3">
+            <div class="grid md:grid-cols-2 gap-3">
+              <input name="zip_a" type="file" accept=".zip" required class="input">
+              <input name="zip_b" type="file" accept=".zip" required class="input">
+            </div>
+            <select name="preset" class="input">
+              <option value="lq">Liên Quân</option>
+              <option value="lq2">Liên Quân kgvn2</option>
+              <option value="pubg">PUBG GL+VNG</option>
+              <option value="pubg-global">PUBG GLOBAL</option>
+              <option value="pubg-vng">PUBG VNG</option>
+                <option value="pubg-kr">PUBG KOREA (KR)</option>
+                <option value="pubg-tw">PUBG TAIWAN (TW)</option>
+                <option value="pubg-bgmi">BGMI INDIA</option>
+              <option value="auto">Tự động</option>
+            </select>
+            <select name="priority" class="input">
+              <option value="b">Ưu tiên gói B</option>
+              <option value="a">Ưu tiên gói A</option>
+            </select>
+            <select name="pubg_folder" class="input">
+              <option value="preserve">Mặc định</option>
+              <option value="paks">Saved/Paks</option>
+              <option value="puffer_temp">puffer_temp</option>
+            </select>
+            <button class="btn" type="submit">GỘP VÀ TẢI ZIP</button>
+            <pre id="zip_merge_error" class="hidden p-4 bg-red-950 text-red-300"></pre>
+          </form>
+        </div>
+      </div>
+    </section>
+
+
+    <div class="card mt-6">
+      <h2 class="font-bold text-fuchsia-300 mb-3">TỆP ĐÃ XUẤT GẦN ĐÂY</h2>
+      <ul id="history_list" class="space-y-2"></ul>
+    </div>
+  </div>
+</main>
+
+
+<script>
+const tabs=document.querySelectorAll('.tab');
+const panels=document.querySelectorAll('.panel');
+tabs.forEach(btn=>btn.addEventListener('click',()=>{
+  tabs.forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
+  panels.forEach(p=>p.classList.add('hidden'));
+  document.getElementById('panel-'+btn.dataset.tab).classList.remove('hidden');
+}));
+
+
+function syncPrefix(form){
+  const mode=form.querySelector('input[name="path_mode"]:checked');
+  const prefix=form.querySelector('input[name="prefix"]');
+  if(prefix) prefix.disabled=!(mode&&mode.value==='custom');
+}
+document.querySelectorAll('form').forEach(form=>{
+  form.querySelectorAll('input[name="path_mode"]').forEach(x=>x.addEventListener('change',()=>syncPrefix(form)));
+  syncPrefix(form);
+});
+
+
+async function loadHistory(){
+  try{
+    const res=await fetch('/history');
+    const data=await res.json();
+    const list=document.getElementById('history_list');
+    list.innerHTML='';
+    (data.files||[]).forEach(f=>{
+      const li=document.createElement('li');
+      li.innerHTML='<a class="text-cyan-400 hover:text-fuchsia-400" href="/download_out/'+encodeURIComponent(f)+'">'+f+'</a>';
+      list.appendChild(li);
+    });
+    if(!(data.files||[]).length) list.innerHTML='<li class="text-slate-500">Chưa có file</li>';
+  }catch(e){}
+}
+
+
+async function downloadForm(formId,url,errorId,statusId){
+  const form=document.getElementById(formId);
+  const err=document.getElementById(errorId);
+  const status=statusId?document.getElementById(statusId):null;
+  if(err) err.classList.add('hidden');
+  if(status){status.classList.add('hidden');status.textContent='';}
+  const btn=form.querySelector('button[type=submit]');
+  const old=btn.textContent;
+  btn.disabled=true;btn.textContent='ĐANG XỬ LÝ...';
+  try{
+    const res=await fetch(url,{method:'POST',body:new FormData(form)});
+    if(!res.ok) throw new Error(await res.text());
+
+
+    const verify=res.headers.get('X-3105-Verify');
+    const rules=res.headers.get('X-3105-Rules');
+    const schema=res.headers.get('X-3105-Schema');
+    const bundles=res.headers.get('X-3105-Bundles');
+    const diagStatus=res.headers.get('X-3105-Diagnostic-Status');
+    const warningHeader=res.headers.get('X-3105-Warnings');
+    const errorHeader=res.headers.get('X-3105-Diagnostic-Errors');
+    let responseWarnings=[];
+    let responseErrors=[];
+    try{if(warningHeader) responseWarnings=JSON.parse(decodeURIComponent(warningHeader));}catch(e){}
+    try{if(errorHeader) responseErrors=JSON.parse(decodeURIComponent(errorHeader));}catch(e){}
+
+
+    const oldTotal=res.headers.get('X-3105-Old-Total');
+    const incoming=res.headers.get('X-3105-Incoming');
+    const added=res.headers.get('X-3105-Added');
+    const overwritten=res.headers.get('X-3105-Overwritten');
+    const same=res.headers.get('X-3105-Same');
+    const finalTotal=res.headers.get('X-3105-Final-Total');
+
+
+    const blob=await res.blob();
+    const cd=res.headers.get('Content-Disposition')||'';
+    const m=cd.match(/filename\*?=(?:UTF-8''|")?([^";]+)/i);
+    let filename='download.bin';
+    if(m) filename=decodeURIComponent(m[1].replace(/"/g,''));
+    const obj=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=obj;a.download=filename;document.body.appendChild(a);a.click();a.remove();
+    URL.revokeObjectURL(obj);
+
+
+    if(status){
+      let text='';
+      if(verify==='OK'){
+        text='VERIFY: OK – '+(rules||0)+' RULE | schema '+(schema||'?');
+        if(bundles) text+='\nBUNDLE: '+bundles;
+      }
+      if(oldTotal!==null){
+        text+='\n\nCẬP NHẬT THÔNG MINH';
+        text+='\nRule cũ: '+oldTotal;
+        text+='\nRule từ gói mới: '+(incoming||0);
+        text+='\nThêm mới: '+(added||0);
+        text+='\nGhi đè: '+(overwritten||0);
+        text+='\nGiống hệt: '+(same||0);
+        text+='\nTổng rule cuối: '+(finalTotal||0);
+      }
+      if(diagStatus) text+='\n\nDIAGNOSTICS: '+diagStatus;
+      if(responseWarnings.length) text+='\nCẢNH BÁO:\n'+responseWarnings.map(x=>'- '+x).join('\n');
+      if(responseErrors.length) text+='\nLỖI:\n'+responseErrors.map(x=>'- '+x).join('\n');
+      if(text){status.textContent=text;status.classList.remove('hidden');}
+    }else if(responseWarnings.length||responseErrors.length){
+      alert([].concat(responseWarnings,responseErrors).join('\n'));
+    }
+    loadHistory();
+  }catch(e){
+    if(err){err.textContent=e.message;err.classList.remove('hidden');}
+  }finally{
+    btn.disabled=false;btn.textContent=old;
+  }
+}
+
+
+document.getElementById('buildForm').addEventListener('submit',e=>{e.preventDefault();if(previewLoaded&&previewSignature!==currentPreviewSignature()){alert('Cấu hình đã thay đổi. Hãy xem trước lại trước khi Build.');return;}if(![...previewTable.querySelectorAll('input')].every(i=>i.reportValidity()))return;downloadForm('buildForm','/build','build_error','build_status');});
+document.getElementById('extractForm').addEventListener('submit',e=>{e.preventDefault();downloadForm('extractForm','/extract','extract_error');});
+document.getElementById('updateForm').addEventListener('submit',e=>{e.preventDefault();downloadForm('updateForm','/update','update_error','update_status');});
+document.getElementById('rebundleForm').addEventListener('submit',e=>{e.preventDefault();downloadForm('rebundleForm','/rebundle','rebundle_error');});
+document.getElementById('zipCleanForm').addEventListener('submit',e=>{e.preventDefault();downloadForm('zipCleanForm','/zip/clean','zip_clean_error');});
+document.getElementById('zipMergeForm').addEventListener('submit',e=>{e.preventDefault();downloadForm('zipMergeForm','/zip/merge','zip_merge_error');});
+
+
+const targetOverrides = {};
+const targetInput = document.getElementById('target_overrides');
+const previewTable = document.getElementById('preview_table');
+const previewSearch = document.getElementById('preview_search');
+const previewBundleFilter = document.getElementById('preview_bundle_filter');
+let previewPage=1, previewTotalPages=1, previewRows=[], previewSignature='', previewLoaded=false;
+function syncOverrides(){targetInput.value=JSON.stringify(targetOverrides);}
+function cleanCell(text){const el=document.createElement('span');el.textContent=String(text);return el;}
+function currentPreviewSignature(){const f=document.getElementById('buildForm');return [...f.querySelectorAll('input,select')].filter(x=>x.name && !['target_overrides','page'].includes(x.name) && x.type!=='file').map(x=>x.name+':'+(x.type==='radio'||x.type==='checkbox'?(x.checked?x.value:''):x.value)).join('|');}
+function invalidatePreview(){previewLoaded=false;previewTable.replaceChildren();document.getElementById('preview_page_info').textContent='Cấu hình thay đổi — hãy xem trước lại';}
+document.getElementById('build_input').addEventListener('change',()=>{Object.keys(targetOverrides).forEach(k=>delete targetOverrides[k]);syncOverrides();invalidatePreview();});
+document.getElementById('buildForm').addEventListener('change',e=>{if(e.target.id!=='build_input' && e.target.id!=='target_overrides' && e.target.closest('#preview_table')===null) invalidatePreview();});
+function validateEditorPath(path){return /^Documents\/[^\\\x00-\x1f:]+(?:\/[^\\\x00-\x1f:]+)*$/.test(path) && !path.split('/').some(x=>x==='.'||x==='..');}
+function renderEditablePreview(rows){
+  previewRows=rows;previewTable.replaceChildren();
+  const table=document.createElement('table');table.className='w-full text-sm';
+  const head=document.createElement('tr');
+  ['File nguồn','Bundle ID','Đích đến (sửa được)','Trạng thái','Terminal','Kích thước'].forEach(h=>{const th=document.createElement('th');th.className='p-2 text-left border-b border-slate-600';th.textContent=h;head.append(th);});table.append(head);
+  rows.filter(r=>{const q=previewSearch.value.toLowerCase();return (!previewBundleFilter.value||r.bundleID===previewBundleFilter.value)&&(!q||[r.source,r.bundleID,r.target].some(v=>String(v).toLowerCase().includes(q)));}).forEach(r=>{
+    const tr=document.createElement('tr');tr.className='border-b border-slate-700';
+    const addCell=value=>{const td=document.createElement('td');td.className='p-2 align-top';td.append(cleanCell(value));tr.append(td);return td;};
+    addCell(r.source);addCell(r.bundleID);
+    const td=document.createElement('td');td.className='p-2';const input=document.createElement('input');input.className='input';input.value=r.target;input.setAttribute('aria-label','Đích đến '+r.source+' '+r.bundleID);
+    const status=addCell('DEFAULT'),term=addCell(r.terminal||'');
+    function check(){const path=input.value;const duplicate=rows.some(other=>other!==r&&other.bundleID===r.bundleID&&other.target===path);const valid=validateEditorPath(path);status.textContent=!valid?'INVALID':duplicate?'DUPLICATE':path===r.originalTarget?'DEFAULT':'CUSTOM';status.style.color=(!valid||duplicate)?'#f87171':'';input.setCustomValidity(!valid?'Đường dẫn phải bắt đầu Documents/ và không chứa ký tự nguy hiểm':duplicate?'Đích trùng trong trang xem trước':'');return valid&&!duplicate;}
+    input.addEventListener('input',()=>{r.target=input.value;if(!targetOverrides[r.source])targetOverrides[r.source]={};if(input.value===r.originalTarget)delete targetOverrides[r.source][r.bundleID];else targetOverrides[r.source][r.bundleID]=input.value;if(!Object.keys(targetOverrides[r.source]).length)delete targetOverrides[r.source];syncOverrides();term.textContent='replace --bundle '+r.bundleID+' --target '+JSON.stringify(input.value);rows.forEach(x=>x._check&&x._check());});
+    r.originalTarget=r.originalTarget||r.target;r._check=check;td.append(input);tr.insertBefore(td,status);addCell(r.size+' B');check();table.append(tr);
+  });previewTable.append(table);
+}
+previewSearch.addEventListener('input',()=>renderEditablePreview(previewRows));
+previewBundleFilter.addEventListener('change',()=>renderEditablePreview(previewRows));
+document.getElementById('preview_export').addEventListener('click',()=>{const blob=new Blob([JSON.stringify({overrides:targetOverrides, page:previewPage, rows:previewRows.map(({_check,...r})=>r)},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='3105_mapping_report.json';a.click();URL.revokeObjectURL(a.href);});
+document.getElementById('preview_prev').addEventListener('click',()=>{if(previewPage>1){previewPage--;document.getElementById('btnPreview').click();}});
+document.getElementById('preview_next').addEventListener('click',()=>{if(previewPage<previewTotalPages){previewPage++;document.getElementById('btnPreview').click();}});
+document.getElementById('btnPreview').addEventListener('click',async()=>{
+  const out=document.getElementById('preview_output');
+  out.classList.remove('hidden');
+  out.textContent='ĐANG PHÂN TÍCH...';
+  try{
+    const formData=new FormData(document.getElementById('buildForm'));formData.set('page',String(previewPage));
+    const res=await fetch('/preview_path',{method:'POST',body:formData});
+    const data=await res.json();
+    if(!res.ok||!data.success) throw new Error(data.error||'Lỗi preview');
+    previewLoaded=true;previewSignature=currentPreviewSignature();previewTotalPages=data.total_pages||1;
+    document.getElementById('preview_page_info').textContent='Trang '+previewPage+'/'+previewTotalPages+' ('+(data.total_rows||0)+' dòng)';
+    const oldFilter=previewBundleFilter.value;previewBundleFilter.replaceChildren(new Option('Tất cả Bundle ID',''));(data.bundles||[]).forEach(b=>previewBundleFilter.add(new Option(b,b)));previewBundleFilter.value=oldFilter;
+    (data.rows||[]).forEach(r=>{r.originalTarget=(targetOverrides[r.source]&&targetOverrides[r.source][r.bundleID])?r.target:r.target;});
+    renderEditablePreview(data.rows||[]);
+    let text='GAME: '+String(data.preset||'').toUpperCase();
+    text+='\nBUNDLE: '+(data.bundles||[]).join(', ');
+    text+='\nSCHEMA: '+data.schema;
+    text+='\nFILE NGUỒN: '+data.source_file_count;
+    text+='\nRULE DỰ KIẾN: '+data.rule_count;
+    text+='\nRESOURCES: '+((data.resources_versions||[]).join(', ')||'Không xác định')+'\n\n';
+    (data.rows||[]).forEach(r=>{
+      text+=r.source+'\n→ '+r.bundleID+'/'+r.target+'\n'+r.size+' B | '+r.sha256+'\n\n';
+    });
+    if(data.truncated) text+='... giới hạn 100 dòng đầu\n';
+    const d=data.diagnostics||{};
+    text+='\nDIAGNOSTICS: '+(d.status||'OK')+'\n';
+    if((d.errors||[]).length) text+='\nLỖI:\n'+d.errors.map(x=>'- '+x).join('\n');
+    if((d.warnings||[]).length) text+='\nCẢNH BÁO:\n'+d.warnings.map(x=>'- '+x).join('\n');
+    if((d.excluded_export_entries||[]).length){
+      text+='\nFILE PHỤ TRỢ KHÔNG ĐƯA VÀO GAME:\n';
+      d.excluded_export_entries.forEach(x=>{text+='- '+x.path+' — '+x.reason+'\n';});
+    }
+    out.textContent=text;
+  }catch(e){out.textContent='LỖI: '+e.message;}
+});
+
+
+document.getElementById('zipDiagnoseForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const out=document.getElementById('zip_diagnose_output');
+  out.classList.remove('hidden');out.textContent='ĐANG CHẨN ĐOÁN...';
+  try{
+    const res=await fetch('/zip/diagnose',{method:'POST',body:new FormData(e.target)});
+    const data=await res.json();
+    if(!data.success) throw new Error(data.error||'Lỗi');
+    const d=data.diagnostics||{};
+    let text='CHẨN ĐOÁN: '+(d.status||'OK')+'\n';
+    text+='File 0 byte: '+(d.zero_byte||[]).length+'\n';
+    text+='Target trùng cùng SHA (dedupe): '+(d.dedupable_duplicate_targets||[]).length+'\n';
+    text+='Target trùng khác SHA (ERROR): '+(d.conflicting_duplicate_targets||[]).length+'\n';
+    text+='Resources: '+((d.resource_versions||[]).join(', ')||'Không xác định')+'\n';
+    text+='File hệ thống cần chú ý: '+(d.notable_lq_files||[]).length+'\n';
+    text+='File phụ trợ bị loại có báo: '+(d.excluded_export_entries||[]).length+'\n';
+    if((d.errors||[]).length) text+='\nLỖI:\n'+d.errors.map(x=>'- '+x).join('\n');
+    if((d.warnings||[]).length) text+='\nCẢNH BÁO:\n'+d.warnings.map(x=>'- '+x).join('\n');
+    if((d.conflicting_duplicate_targets||[]).length){
+      text+='\nCHI TIẾT XUNG ĐỘT:\n';
+      d.conflicting_duplicate_targets.forEach(x=>{text+='- '+x.bundleID+'/'+x.relativePath+' | '+x.sources.join(' <> ')+'\n';});
+    }
+    if((d.excluded_export_entries||[]).length){
+      text+='\nFILE PHỤ TRỢ KHÔNG ĐƯA VÀO GAME:\n';
+      d.excluded_export_entries.forEach(x=>{text+='- '+x.path+' — '+x.reason+'\n';});
+    }
+    out.textContent=text;
+  }catch(e){out.textContent='LỖI: '+e.message;}
+});
+
+
+document.getElementById('zipAnalyzeForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const out=document.getElementById('zip_analyze_output');
+  out.classList.remove('hidden');out.textContent='ĐANG PHÂN TÍCH...';
+  try{
+    const res=await fetch('/zip/analyze',{method:'POST',body:new FormData(e.target)});
+    const data=await res.json();
+    out.textContent=data.output||data.error||'Không có dữ liệu';
+  }catch(e){out.textContent=e.message;}
+});
+
+
+document.getElementById('inspectForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const out=document.getElementById('inspect_output');
+  out.classList.remove('hidden');out.textContent='ĐANG KIỂM TRA...';
+  try{
+    const res=await fetch('/inspect',{method:'POST',body:new FormData(e.target)});
+    const data=await res.json();
+    out.textContent=data.output||'Không có dữ liệu';
+  }catch(e){out.textContent=e.message;}
+});
+
+
+document.getElementById('build_input').addEventListener('change',async e=>{
+  if(!e.target.files.length) return;
+  const fd=new FormData();fd.append('input_file',e.target.files[0]);
+  const hint=document.getElementById('detect_hint');
+  hint.textContent='ĐANG NHẬN DIỆN...';
+  try{
+    const res=await fetch('/detect',{method:'POST',body:fd});
+    const data=await res.json();
+    if(data.success){
+      document.getElementById('build_preset').value=data.preset;
+      hint.textContent='ĐÃ NHẬN DIỆN: '+data.preset.toUpperCase()+' • '+data.count+' FILE';
+    }else hint.textContent=data.error||'THẤT BẠI';
+  }catch(e){hint.textContent='THẤT BẠI';}
+});
+
+
+loadHistory();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById('pubg5Separate')?.addEventListener('click', async () => {
+    const form=document.getElementById('buildForm');
+    const fd=new FormData(form);
+    if (!(fd.get('input_file') instanceof File) || !fd.get('input_file').name) { alert('Hãy chọn file PAK hoặc ZIP ở FILE NGUỒN'); return; }
+    const btn=document.getElementById('pubg5Separate');btn.disabled=true;btn.textContent='Đang tạo và verify 5 file...';
+    try {
+      const res=await fetch('/build_pubg5_separate',{method:'POST',body:fd});
+      if(!res.ok) throw new Error(await res.text());
+      const blob=await res.blob();const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download='PUBG_5_SERVERS_SEPARATE.zip';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+    } catch(e) {alert('Lỗi: '+e.message);} finally {btn.disabled=false;btn.textContent='Tạo 5 file .3105 riêng (ZIP)';}
+  });
+
+});
+</script>
+</body>
+</html>

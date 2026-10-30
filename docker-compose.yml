@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    container_name: 3105_builder
+    restart: unless-stopped
+    ports:
+      - "2006:2006"
+    volumes:
+      - ./uploads:/app/uploads
+      - ./outputs:/app/outputs
